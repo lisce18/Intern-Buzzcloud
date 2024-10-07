@@ -40,7 +40,7 @@ contract Timelock{
         for(uint256 i = 0; i < messages.length; i++){
             if(block.timestamp < messages[i].unlockTime){
                 uint256 remainingTime = messages[i].unlockTime - block.timestamp;
-                revert(string(abi.encodePacked('Message is still locked. Time remaining: ', convertToString(remainingTime), ' seconds')));
+                string(abi.encodePacked('Message is still locked. Time remaining: ', convertToString(remainingTime), ' seconds'));
             } else {
                 revealedMessages[i] = messages[i].text;
             }

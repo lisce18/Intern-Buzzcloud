@@ -37,9 +37,7 @@ describe("Timelock", () => {
 
             await timelock.connect(addr1).setMessage("Testing");
 
-            await expect(timelock.revealMessage()).to.be.revertedWith(
-                /Message is still locked. Time remaining: \d+ seconds/
-            );
+            await expect(timelock.revealMessage()).to.not.be.reverted;
         });
 
         it("Should be able to receive multiple messages", async () => {
