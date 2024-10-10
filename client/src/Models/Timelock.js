@@ -47,19 +47,6 @@ const Timelock = () => {
         }
     }, [walletAddress]);
 
-    const calculateTimeLeft = (unlockTime) => {
-        const difference = unlockTime - new Date().getTime();
-        let timeLeft = {};
-
-        if (difference > 0) {
-            timeLeft = {
-                hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-                minutes: Math.floor((difference / 1000 / 60) % 60),
-                seconds: Math.floor((difference / 1000) % 60),
-            };
-        }
-    };
-
     return (
         <div className="container">
             <div className="header">
@@ -93,7 +80,12 @@ const Timelock = () => {
                         onChange={(e) => setMessageText(e.target.value)}
                         placeholder="Enter your message here!"
                     />
-                    <button onClick={handleSetMessage}>Set Message</button>
+                    <button
+                        className="addMsgBtn"
+                        onClick={handleSetMessage}
+                    >
+                        Set Message
+                    </button>
                 </div>
             )}
             <div className="messages">
@@ -101,12 +93,15 @@ const Timelock = () => {
                 <ul>
                     {revealedMessages.length > 0 ? (
                         revealedMessages.map((msg, index) => (
-                            <li key={index}>
-                                {msg.text} - {renderCountdown(msg.unlockTime)}
+                            <li
+                                className="message"
+                                key={index}
+                            >
+                                {msg}
                             </li>
                         ))
                     ) : (
-                        <li>No messages to display</li>
+                        <li className="status">No messages to display</li>
                     )}
                 </ul>
             </div>
