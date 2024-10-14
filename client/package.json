@@ -21,7 +21,7 @@
         "web-vitals": "^2.1.4"
     },
     "scripts": {
-        "start": "craco start --mac_old_space_size=4096 start",
+        "start": "craco start",
         "build": "craco build",
         "test": "craco test"
     },
