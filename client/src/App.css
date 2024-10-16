@@ -6,7 +6,14 @@ body {
     width: 100vw;
     overflow-y: hidden;
     overflow-x: hidden;
-    background-color: rgb(251, 183, 59);
+    background: linear-gradient(
+        to bottom,
+        #ff8c00 0%,
+        #000000 30%,
+        #000000 70%,
+        #ff8c00 100%
+    );
+    font-family: "Lexend", sans-serif;
 }
 
 #root {
@@ -24,7 +31,10 @@ body {
     width: 70vw;
     height: 90vh;
     border-radius: 15px;
-    background-color: rgb(250, 233, 184);
+    background-color: rgb(249, 238, 205);
+    transition: width 0.2s ease;
+    box-shadow: 10px 10px 14px rgba(255, 140, 0, 0.5);
+    overflow-y: auto;
 }
 
 .header {
@@ -36,26 +46,53 @@ body {
     width: 90%;
     align-items: center;
     margin-top: 2rem;
+    transition: width 0.2s ease;
+}
+
+.title {
+    display: flex;
+    flex-direction: column;
+}
+
+.title p {
+    margin: 0;
+    font-weight: 500;
 }
 
 .walletBtn,
 .addMsgBtn {
-    background-color: rgb(251, 183, 59);
+    background-color: #ff8c00;
     color: #000;
     border: none;
     border-radius: 5px;
-    padding: 0.5rem 1rem;
     font-size: 1rem;
     cursor: pointer;
-    width: 20rem;
+    width: 15rem;
     height: 2.5rem;
     font-size: 1.5rem;
     font-weight: bold;
 }
 
+.addMsgBtn {
+    width: 11rem;
+}
+
 .walletBtn:hover,
 .addMsgBtn:hover {
-    background-color: rgb(255, 215, 0);
+    background-color: #ff8c00a9;
+}
+
+.disconnectWalletBtn {
+    background-color: #ff8c00;
+    color: #000;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 13rem;
+    height: 2rem;
+    font-size: 1.2rem;
+    font-weight: 600;
 }
 
 .addMessage {
@@ -76,7 +113,8 @@ input {
     padding: 0.5rem 1rem;
     font-size: 1rem;
     margin: 0.5rem;
-    width: 50%;
+    width: 60%;
+    color: #000000;
 }
 
 .messages {
@@ -90,11 +128,88 @@ input {
     overflow-y: auto;
 }
 
+.messages h2 {
+    text-decoration: underline;
+}
+
 .message {
     display: flex;
     columns: 2;
 }
 
 .status {
-    text-decoration: none;
+    list-style: none;
+    align-self: center;
+    font-size: 1.7rem;
+    font-weight: 500;
+    transition: font-size 0.3s ease;
+}
+
+@media screen and (max-width: 750px) {
+    .container {
+        width: 75vw;
+    }
+
+    .header {
+        width: 90%;
+        margin: 0;
+        margin-top: 1rem;
+    }
+
+    input {
+        width: 50%;
+    }
+
+    .messages {
+        width: 70%;
+        margin: 1rem 0 0 1rem;
+    }
+
+    .status {
+        font-size: 1.5rem;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .container {
+        width: 60vw;
+    }
+}
+
+@media screen and (max-width: 650px) {
+    .container {
+        width: 80vw;
+    }
+
+    .header {
+        width: 90%;
+        margin: 0;
+        margin-top: 1rem;
+    }
+
+    input {
+        width: 50%;
+    }
+
+    .messages {
+        width: 70%;
+        margin: 1rem 0 0 1rem;
+    }
+
+    .status {
+        font-size: 1.5rem;
+    }
+
+    .addMsgBtn {
+        font-size: 1.2rem;
+    }
+}
+
+@media screen and (max-height: 500px) {
+    .header {
+        margin-top: 2rem;
+    }
+    .messages {
+        margin-top: 1rem;
+    }
 }

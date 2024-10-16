@@ -20,7 +20,23 @@
         "inputs": [],
         "name": "revealMessage",
         "outputs": [
-            { "internalType": "string[]", "name": "", "type": "string[]" }
+            {
+                "components": [
+                    {
+                        "internalType": "string",
+                        "name": "text",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "unlockTime",
+                        "type": "uint256"
+                    }
+                ],
+                "internalType": "struct Timelock.RevealedMessage[]",
+                "name": "",
+                "type": "tuple[]"
+            }
         ],
         "stateMutability": "view",
         "type": "function"

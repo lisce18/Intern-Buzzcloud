@@ -29,7 +29,7 @@ describe("Timelock", () => {
             await hre.network.provider.send("evm_mine"); // Mine a new block
 
             const messageAfter = await timelock.revealMessage();
-            expect(messageAfter[0]).to.equal("Testing");
+            expect(messageAfter[0].text).to.equal("Testing");
         });
 
         it("Should not be able to reveal message before unlockTime is up", async () => {
@@ -52,8 +52,8 @@ describe("Timelock", () => {
             await hre.network.provider.send("evm_mine");
 
             const messageAfter = await timelock.revealMessage();
-            expect(messageAfter[0]).to.equal("Testing1");
-            expect(messageAfter[1]).to.equal("Testing2");
+            expect(messageAfter[0].text).to.equal("Testing1");
+            expect(messageAfter[1].text).to.equal("Testing2");
         });
 
         it("Should be able to update the message", async () => {
@@ -66,7 +66,7 @@ describe("Timelock", () => {
             await hre.network.provider.send("evm_mine");
 
             const messageAfter = await timelock.revealMessage();
-            expect(messageAfter[0]).to.equal("Updated");
+            expect(messageAfter[0].text).to.equal("Updated");
         });
 
         it("Should update the message and set a new unlock time when a previous message is set and unlock time is up", async () => {
@@ -83,7 +83,7 @@ describe("Timelock", () => {
             await hre.network.provider.send("evm_mine");
 
             const messageAfter = await timelock.revealMessage();
-            expect(messageAfter[0]).to.equal("Updated");
+            expect(messageAfter[0].text).to.equal("Updated");
         });
     });
 });

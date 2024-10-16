@@ -7,6 +7,11 @@ contract Timelock{
         string text;
         uint256 unlockTime;
     }
+
+    struct RevealedMessage {
+        string text;
+        uint256 unlockTime;
+    }
     
 
     Message[] public messages;
@@ -35,14 +40,20 @@ contract Timelock{
         } 
     }
 
-    function revealMessage() public view returns(string[] memory){
-        string[] memory revealedMessages = new string[](messages.length);
+    function revealMessage() public view returns(RevealedMessage[] memory){
+        RevealedMessage[] memory revealedMessages = new RevealedMessage[](messages.length);
         for(uint256 i = 0; i < messages.length; i++){
             if(block.timestamp < messages[i].unlockTime){
                 uint256 remainingTime = messages[i].unlockTime - block.timestamp;
-                string(abi.encodePacked('Message is still locked. Time remaining: ', convertToString(remainingTime), ' seconds'));
+                revealedMessages[i] = RevealedMessage({
+                    text: string(abi.encodePacked('Message is still locked. Time remaining: ', convertToString(remainingTime), ' seconds')),
+                    unlockTime: messages[i].unlockTime
+                });
             } else {
-                revealedMessages[i] = messages[i].text;
+                revealedMessages[i] = RevealedMessage({
+                    text: messages[i].text,
+                    unlockTime: messages[i].unlockTime
+                    });
             }
         }
         return revealedMessages;

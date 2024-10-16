@@ -9,12 +9,21 @@ const Timelock = () => {
     const [walletAddress, setWalletAddress] = useState("");
     const [message, setMessageText] = useState("");
     const [revealedMessages, setRevealedMessages] = useState([]);
-    const [status, setStatus] = useState("");
+    const [status, setStatus] = useState("Connect wallet to display messages.");
 
     const handleConnectWallet = async () => {
         const walletResponse = await connectWallet();
         setWalletAddress(walletResponse.address);
-        setStatus(walletResponse.status);
+        setStatus("");
+        handleRevealMessages();
+    };
+
+    const handleDisconnectWallet = () => {
+        setWalletAddress("");
+        setStatus("Wallet disconnected.");
+        setTimeout(() => {
+            setStatus("Connect wallet to display messages.");
+        }, 3000);
     };
 
     const handleSetMessage = async () => {
@@ -34,8 +43,14 @@ const Timelock = () => {
     const handleRevealMessages = async () => {
         try {
             const response = await revealMessage();
-            setRevealedMessages(response.messages || []);
-            setStatus(response.status);
+            console.log("Revealed messages response:", response); // Debugging log
+            const messages = response.messages || [];
+            setRevealedMessages(messages);
+            if (messages.length === 0) {
+                setStatus("No messages to display!");
+            } else {
+                setStatus("");
+            }
         } catch (err) {
             setStatus(`Error: ${err.message}`);
         }
@@ -50,7 +65,10 @@ const Timelock = () => {
     return (
         <div className="container">
             <div className="header">
-                <h1>Timelock dApp</h1>
+                <h1 className="title">
+                    <p>Timelock</p>
+                    <p>dApp</p>
+                </h1>
                 {!walletAddress && (
                     <button
                         className="walletBtn"
@@ -61,15 +79,25 @@ const Timelock = () => {
                 )}
 
                 {walletAddress && walletAddress.length > 0 && (
-                    <p className="walletAddress">
-                        Connected:{" "}
-                        {`${walletAddress.substring(
-                            0,
-                            6
-                        )}...${walletAddress.substring(
-                            walletAddress.length - 6
-                        )}`}
-                    </p>
+                    <>
+                        <div className="block">
+                            <p className="walletAddress">
+                                Connected:{" "}
+                                {`${walletAddress.substring(
+                                    0,
+                                    6
+                                )}...${walletAddress.substring(
+                                    walletAddress.length - 6
+                                )}`}
+                            </p>
+                            <button
+                                className="disconnectWalletBtn"
+                                onClick={handleDisconnectWallet}
+                            >
+                                Disconnect wallet
+                            </button>
+                        </div>
+                    </>
                 )}
             </div>
             {walletAddress && (
@@ -91,21 +119,25 @@ const Timelock = () => {
             <div className="messages">
                 <h2>Messages</h2>
                 <ul>
-                    {revealedMessages.length > 0 ? (
+                    {walletAddress && revealedMessages.length > 0 ? (
                         revealedMessages.map((msg, index) => (
                             <li
                                 className="message"
                                 key={index}
                             >
-                                {msg}
+                                {msg.text}
+                                {msg.unlockTime >
+                                    Math.floor(Date.now() / 1000) && (
+                                    <span> </span>
+                                )}
                             </li>
                         ))
                     ) : (
-                        <li className="status">No messages to display</li>
+                        <></>
                     )}
                 </ul>
             </div>
-            <p>{status}</p>
+            <p className="status">{status}</p>
         </div>
     );
 };
