@@ -1,15 +1,25 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "description": "The backend including contracts and tests for the project I'll be building during my time as an intern at Buzzcloud",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Wilhelm Lövgren Olofsson",
-  "license": "ISC",
-  "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
-    "hardhat": "^2.22.12"
-  }
+    "name": "backend",
+    "version": "1.0.0",
+    "description": "Backend for Favorite Drink dApp",
+    "main": "server.js",
+    "type": "module",
+    "scripts": {
+        "start": "node server.js",
+        "dev": "nodemon server.js"
+    },
+    "author": "Wilhelm Lövgren Olofsson",
+    "license": "ISC",
+    "dependencies": {
+        "@aws-sdk/client-dynamodb": "^3.677.0",
+        "@aws-sdk/client-kms": "^3.677.0",
+        "@aws-sdk/lib-dynamodb": "^3.677.0",
+        "dotenv": "^16.4.5",
+        "ethers": "^6.13.4",
+        "express": "^4.21.1",
+        "node-fetch": "^3.3.2"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.7"
+    }
 }

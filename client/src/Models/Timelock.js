@@ -1,49 +1,64 @@
 import React, { useEffect, useState } from "react";
-import {
-    connectWallet,
-    setMessage,
-    revealMessage,
-} from "../utilities/ContractInteractions";
+import { login, getAccessToken, logout } from "../utilities/login";
+import { setMessage, revealMessage } from "../utilities/ContractInteractions";
+import { useNavigate } from "react-router-dom";
 
 const Timelock = () => {
-    const [walletAddress, setWalletAddress] = useState("");
     const [message, setMessageText] = useState("");
     const [revealedMessages, setRevealedMessages] = useState([]);
     const [status, setStatus] = useState("Connect wallet to display messages.");
+    const [accessToken, setAccessToken] = useState("");
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-    const handleConnectWallet = async () => {
-        const walletResponse = await connectWallet();
-        setWalletAddress(walletResponse.address);
-        setStatus("");
-        handleRevealMessages();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = getAccessToken();
+        if (token) {
+            setAccessToken(token);
+            setIsAuthenticated(true);
+            handleRevealMessages();
+        }
+    });
+
+    const handleLogin = async () => {
+        try {
+            const token = await login();
+            if (token) {
+                setAccessToken(token);
+                setIsAuthenticated(true);
+                setStatus("Log in sucessfull!");
+                handleRevealMessages();
+            }
+        } catch (err) {
+            setStatus(`Log in failed: ${err.message}`);
+        }
     };
 
-    const handleDisconnectWallet = () => {
-        setWalletAddress("");
-        setStatus("Wallet disconnected.");
-        setTimeout(() => {
-            setStatus("Connect wallet to display messages.");
-        }, 3000);
+    const handleLogout = () => {
+        logout();
+        setAccessToken("");
+        setIsAuthenticated(false);
+        setStatus("Logged out!");
     };
 
     const handleSetMessage = async () => {
-        if (walletAddress) {
+        if (isAuthenticated && accessToken) {
             try {
-                const response = await setMessage(message);
+                const response = await setMessage(message, accessToken);
                 setStatus(response.status);
                 await handleRevealMessages();
             } catch (err) {
                 setStatus(`Error: ${err.message}`);
             }
         } else {
-            setStatus("Please connect your wallet first!");
+            setStatus("Please log in first!");
         }
     };
 
     const handleRevealMessages = async () => {
         try {
             const response = await revealMessage();
-            console.log("Revealed messages response:", response); // Debugging log
             const messages = response.messages || [];
             setRevealedMessages(messages);
             if (messages.length === 0) {
@@ -56,12 +71,6 @@ const Timelock = () => {
         }
     };
 
-    useEffect(() => {
-        if (walletAddress) {
-            handleRevealMessages();
-        }
-    }, [walletAddress]);
-
     return (
         <div className="container">
             <div className="header">
@@ -69,38 +78,31 @@ const Timelock = () => {
                     <p>Timelock</p>
                     <p>dApp</p>
                 </h1>
-                {!walletAddress && (
+                {!isAuthenticated && (
                     <button
-                        className="walletBtn"
-                        onClick={handleConnectWallet}
+                        className="loginBtn"
+                        onClick={handleLogin}
                     >
-                        Connect Wallet
+                        Log In
                     </button>
                 )}
 
-                {walletAddress && walletAddress.length > 0 && (
+                {isAuthenticated && (
                     <>
                         <div className="block">
-                            <p className="walletAddress">
-                                Connected:{" "}
-                                {`${walletAddress.substring(
-                                    0,
-                                    6
-                                )}...${walletAddress.substring(
-                                    walletAddress.length - 6
-                                )}`}
-                            </p>
+                            <p className="status">Logged in successfully.</p>
                             <button
-                                className="disconnectWalletBtn"
-                                onClick={handleDisconnectWallet}
+                                className="logoutBtn"
+                                onClick={handleLogout}
                             >
-                                Disconnect wallet
+                                Log Out
                             </button>
                         </div>
                     </>
                 )}
             </div>
-            {walletAddress && (
+
+            {isAuthenticated && (
                 <div className="addMessage">
                     <input
                         type="text"
@@ -116,10 +118,11 @@ const Timelock = () => {
                     </button>
                 </div>
             )}
+
             <div className="messages">
                 <h2>Messages</h2>
                 <ul>
-                    {walletAddress && revealedMessages.length > 0 ? (
+                    {isAuthenticated && revealedMessages.length > 0 ? (
                         revealedMessages.map((msg, index) => (
                             <li
                                 className="message"

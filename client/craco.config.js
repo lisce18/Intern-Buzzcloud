@@ -11,6 +11,7 @@ module.exports = {
                 url: require.resolve("url/"),
                 assert: require.resolve("assert/"),
                 stream: require.resolve("stream-browserify"),
+                crypto: require.resolve("crypto-browserify"),
             };
 
             // Add source-map-loader configuration
